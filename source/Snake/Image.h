@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #pragma warning(disable:4514)
 #pragma warning(push, 0)

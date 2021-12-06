@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 constexpr auto MapWidth = 32;
 constexpr auto MapHeight = 24;
@@ -22,7 +22,7 @@ struct FruitData
 {
 	void NextPos()
 	{
-		while (1) // ÿáëîêî íà ñâîáîäíîé êëåòêå
+		while (1) // ÑĞ±Ğ»Ğ¾ĞºĞ¾ Ğ½Ğ° ÑĞ²Ğ¾Ğ±Ğ¾Ğ´Ğ½Ğ¾Ğ¹ ĞºĞ»ĞµÑ‚ĞºĞµ
 		{
 			Fruit.pos.x = rand() % (MapWidth - 2) + 1;
 			Fruit.pos.y = rand() % (MapHeight - 2) + 1;
@@ -69,6 +69,11 @@ struct SnakeSegment
 		last->next->pos = last->pos;		
 	}
 
+	bool CheckCollisionInSegments()
+	{
+		return checkCollisionInSegments(pos, next);
+	}
+
 	Position pos = { MapWidth /2, MapHeight /2};
 	SnakeSegment* next = nullptr;
 
@@ -108,6 +113,18 @@ private:
 			return nextSegment;
 		else
 			return getLastSegment(nextSegment->next);
+	}
+
+	bool checkCollisionInSegments(Position pos, SnakeSegment* nextSegment)
+	{
+		if (nextSegment)
+		{
+			if (pos.x == nextSegment->pos.x && pos.y == nextSegment->pos.y)
+				return true;
+			else
+				return checkCollisionInSegments(pos, nextSegment->next);
+		}
+		return false;
 	}
 };
 

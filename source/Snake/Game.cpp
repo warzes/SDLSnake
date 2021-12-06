@@ -1,4 +1,4 @@
-#include "Image.h"
+ï»¿#include "Image.h"
 #include "GameData.h"
 
 Image floorImage;
@@ -56,25 +56,25 @@ void GameUpdate(double deltaTime, const Uint8* currentKeyStates)
 
 	if (LoseGame) return;
 
-	if (currentKeyStates[SDL_SCANCODE_UP])
+	if (currentKeyStates[SDL_SCANCODE_UP] && direction.y != 1)
 	{
 		stopMove = false;
 		direction.x = 0;
 		direction.y = -1;
 	}
-	if (currentKeyStates[SDL_SCANCODE_DOWN])
+	if (currentKeyStates[SDL_SCANCODE_DOWN] && direction.y != -1)
 	{
 		stopMove = false;
 		direction.x = 0;
 		direction.y = 1;
 	}
-	if (currentKeyStates[SDL_SCANCODE_LEFT])
+	if (currentKeyStates[SDL_SCANCODE_LEFT] && direction.x != 1)
 	{
 		stopMove = false;
 		direction.x = -1;
 		direction.y = 0;
 	}
-	if (currentKeyStates[SDL_SCANCODE_RIGHT])
+	if (currentKeyStates[SDL_SCANCODE_RIGHT] && direction.x != -1)
 	{
 		stopMove = false;
 		direction.x = 1;
@@ -94,7 +94,8 @@ void GameUpdate(double deltaTime, const Uint8* currentKeyStates)
 			Snake.Move(direction);
 
 			// Collision Check
-			if (Map[Snake.pos.x][Snake.pos.y] == TileType::wall) // fail
+			if (Map[Snake.pos.x][Snake.pos.y] == TileType::wall
+				|| Snake.CheckCollisionInSegments()) // fail
 			{
 				LoseGame = true;
 			}
@@ -103,7 +104,7 @@ void GameUpdate(double deltaTime, const Uint8* currentKeyStates)
 				Snake.AddSegment();
 				Fruit.NextPos();
 				delayMove -= speedMod;
-				if (delayMove < 0.1f) // óñêîðÿåì èãðó
+				if (delayMove < 0.1f) // ÑƒÑÐºÐ¾Ñ€ÑÐµÐ¼ Ð¸Ð³Ñ€Ñƒ
 					delayMove = 0.1f;
 			}
 		}
