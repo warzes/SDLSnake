@@ -7,6 +7,7 @@
 constexpr int ScreenWidth = 1024;
 constexpr int ScreentHeight = 768;
 
+extern bool quit;
 void GameInit(SDL_Renderer* renderer);
 void GameUpdate(double deltaTime, const Uint8* currentKeyStates);
 void GameRender(SDL_Renderer* renderer);
@@ -29,7 +30,6 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char* argv[])
 
 	// Main Loop
 	//----------------------------------------------------------------------------
-	bool quit = false;
 	SDL_Event e;
 	int64_t frameTimeCurrent = 0;
 	int64_t frameTimeLast = 0;

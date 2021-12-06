@@ -6,6 +6,7 @@ Image wallImage;
 Image appleImage;
 Image snakeHeadImage;
 Image snakeBodyImage;
+Image failScreen;
 
 void InitMap()
 {
@@ -39,10 +40,12 @@ void GameInit(SDL_Renderer* renderer)
 	appleImage.Create(renderer, "../apple.png");
 	snakeHeadImage.Create(renderer, "../snakeHead.png");
 	snakeBodyImage.Create(renderer, "../snakeBody.png");
+	failScreen.Create(renderer, "../lose.png");
 
 	InitMap();
 }
-
+bool quit = false;
+bool LoseGame = true;
 bool stopMove = true;
 Position direction;
 float timer = 0;
@@ -51,6 +54,14 @@ float speedMod = 0.01f;
 void GameUpdate(double deltaTime, const Uint8* currentKeyStates)
 {
 	timer += deltaTime;
+
+	if (currentKeyStates[SDL_SCANCODE_ESCAPE])
+	{
+		quit = true;
+		return;
+	}
+
+	if (LoseGame) return;
 
 	if (currentKeyStates[SDL_SCANCODE_UP])
 	{
@@ -104,6 +115,11 @@ void GameRender(SDL_Renderer* renderer)
 
 	Snake.Render(renderer, snakeHeadImage, snakeBodyImage);
 
+	if (LoseGame)
+	{
+		failScreen.Render(renderer, 0, 0);
+	}
+
 }
 
 void GameClose()
@@ -113,4 +129,5 @@ void GameClose()
 	appleImage.Close();
 	snakeHeadImage.Close();
 	snakeBodyImage.Close();
+	failScreen.Close();
 }
