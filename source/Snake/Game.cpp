@@ -8,6 +8,14 @@ Image snakeHeadImage;
 Image snakeBodyImage;
 Image failScreen;
 
+bool quit = false;
+bool LoseGame = false;
+bool stopMove = true;
+Position direction;
+float timer = 0;
+float delayMove = 0.25f;
+float speedMod = 0.03f;
+
 void InitMap()
 {
 	for (size_t x = 0; x < MapWidth; x++)
@@ -21,16 +29,6 @@ void InitMap()
 				Map[x][y] = TileType::floor;
 		}
 	}
-
-	while (1) // яблоко на свободной клетке
-	{
-		Fruit.pos.x = rand() % (MapWidth - 2) + 1;
-		Fruit.pos.y = rand() % (MapHeight - 2) + 1;
-
-		if (Map[Fruit.pos.x][Fruit.pos.y] == TileType::floor)
-			break;
-	}
-	
 }
 
 void GameInit(SDL_Renderer* renderer)
@@ -43,14 +41,9 @@ void GameInit(SDL_Renderer* renderer)
 	failScreen.Create(renderer, "../lose.png");
 
 	InitMap();
+	Fruit.NextPos();
 }
-bool quit = false;
-bool LoseGame = true;
-bool stopMove = true;
-Position direction;
-float timer = 0;
-float delayMove = 0.25f;
-float speedMod = 0.01f;
+
 void GameUpdate(double deltaTime, const Uint8* currentKeyStates)
 {
 	timer += deltaTime;
@@ -94,6 +87,20 @@ void GameUpdate(double deltaTime, const Uint8* currentKeyStates)
 		if (!stopMove)
 		{
 			Snake.Move(direction);
+
+			// Collision Check
+			if (Map[Snake.pos.x][Snake.pos.y] == TileType::wall) // fail
+			{
+				LoseGame = true;
+			}
+			if (Fruit.pos.x == Snake.pos.x && Fruit.pos.y == Snake.pos.y)
+			{
+				Snake.AddSegment();
+				Fruit.NextPos();
+				delayMove -= speedMod;
+				if (delayMove < 0.1f) // ускоряем игру
+					delayMove = 0.1f;
+			}
 		}
 	}
 }
@@ -119,11 +126,12 @@ void GameRender(SDL_Renderer* renderer)
 	{
 		failScreen.Render(renderer, 0, 0);
 	}
-
 }
 
 void GameClose()
 {
+	Snake.Close();
+
 	floorImage.Close();
 	wallImage.Close();
 	appleImage.Close();

@@ -20,6 +20,19 @@ struct Position
 
 struct FruitData
 {
+	void NextPos()
+	{
+		while (1) // €блоко на свободной клетке
+		{
+			Fruit.pos.x = rand() % (MapWidth - 2) + 1;
+			Fruit.pos.y = rand() % (MapHeight - 2) + 1;
+
+			if (Map[Fruit.pos.x][Fruit.pos.y] == TileType::floor)
+				break;
+		}
+	}
+
+
 	Position pos;
 } Fruit;
 
@@ -44,6 +57,18 @@ struct SnakeSegment
 		moveSegment(temp, next);
 	}
 
+	void Close()
+	{
+		closeSegment(next);
+	}
+
+	void AddSegment()
+	{
+		SnakeSegment* last = getLastSegment(this);
+		last->next = new SnakeSegment;
+		last->next->pos = last->pos;		
+	}
+
 	Position pos = { MapWidth /2, MapHeight /2};
 	SnakeSegment* next = nullptr;
 
@@ -65,6 +90,24 @@ private:
 			nextSegment->pos = newPos;
 			moveSegment(temp, nextSegment->next);
 		}
+	}
+
+	void closeSegment(SnakeSegment* nextSegment)
+	{
+		if (nextSegment)
+		{
+			nextSegment->Close();
+			delete nextSegment;
+			nextSegment = nullptr;
+		}
+	}
+
+	SnakeSegment* getLastSegment(SnakeSegment* nextSegment)
+	{
+		if (!nextSegment->next)
+			return nextSegment;
+		else
+			return getLastSegment(nextSegment->next);
 	}
 };
 
