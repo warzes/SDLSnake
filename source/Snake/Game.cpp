@@ -43,19 +43,47 @@ void GameInit(SDL_Renderer* renderer)
 	InitMap();
 }
 
+bool stopMove = true;
+Position direction;
+float timer = 0;
+float delayMove = 0.25f;
+float speedMod = 0.01f;
 void GameUpdate(double deltaTime, const Uint8* currentKeyStates)
 {
+	timer += deltaTime;
+
 	if (currentKeyStates[SDL_SCANCODE_UP])
 	{
+		stopMove = false;
+		direction.x = 0;
+		direction.y = -1;
 	}
-	else if (currentKeyStates[SDL_SCANCODE_DOWN])
+	if (currentKeyStates[SDL_SCANCODE_DOWN])
 	{
+		stopMove = false;
+		direction.x = 0;
+		direction.y = 1;
 	}
-	else if (currentKeyStates[SDL_SCANCODE_LEFT])
+	if (currentKeyStates[SDL_SCANCODE_LEFT])
 	{
+		stopMove = false;
+		direction.x = -1;
+		direction.y = 0;
 	}
-	else if (currentKeyStates[SDL_SCANCODE_RIGHT])
+	if (currentKeyStates[SDL_SCANCODE_RIGHT])
 	{
+		stopMove = false;
+		direction.x = 1;
+		direction.y = 0;
+	}
+
+	if (timer > delayMove)
+	{
+		timer = 0;
+		if (!stopMove)
+		{
+			Snake.Move(direction);
+		}
 	}
 }
 
