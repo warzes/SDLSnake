@@ -1,4 +1,5 @@
 #include "Image.h"
+#include "GameData.h"
 
 Image fooTexture;
 
@@ -7,7 +8,7 @@ void GameInit(SDL_Renderer* renderer)
 	fooTexture.Create(renderer, "../foo.png");
 }
 
-void GameUpdate(double frameTimeDelta, const Uint8* currentKeyStates)
+void GameUpdate(double deltaTime, const Uint8* currentKeyStates)
 {
 	if (currentKeyStates[SDL_SCANCODE_UP])
 	{

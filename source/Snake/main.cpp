@@ -8,7 +8,7 @@ constexpr int ScreenWidth = 1024;
 constexpr int ScreentHeight = 768;
 
 void GameInit(SDL_Renderer* renderer);
-void GameUpdate(double frameTimeDelta, const Uint8* currentKeyStates);
+void GameUpdate(double deltaTime, const Uint8* currentKeyStates);
 void GameRender(SDL_Renderer* renderer);
 void GameClose();
 
@@ -16,6 +16,7 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char* argv[])
 {
 	// Main Init
 	//----------------------------------------------------------------------------
+	srand(time(0));
 	SDL_Init(SDL_INIT_VIDEO);
 	IMG_Init(IMG_INIT_PNG);
 	SDL_Window* window = SDL_CreateWindow("Snake", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, ScreenWidth, ScreentHeight, SDL_WINDOW_SHOWN);
@@ -35,6 +36,7 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char* argv[])
 	int64_t frameTimeDelta = 0;
 	std::chrono::high_resolution_clock clock;
 	auto startTime = clock.now();
+	static constexpr double MicrosecondsToSeconds = 1.0 / 1000000.0;
 	while (!quit)
 	{
 		frameTimeCurrent = std::chrono::duration_cast<std::chrono::microseconds>(clock.now() - startTime).count();
@@ -48,7 +50,8 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char* argv[])
 		}
 		const Uint8* currentKeyStates = SDL_GetKeyboardState(nullptr);
 
-		GameUpdate(frameTimeDelta, currentKeyStates);
+		const double variableDeltaTimeSeconds = static_cast<double>(frameTimeDelta) * MicrosecondsToSeconds;
+		GameUpdate(variableDeltaTimeSeconds, currentKeyStates);
 
 		SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0xFF);
 		SDL_RenderClear(renderer);

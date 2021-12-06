@@ -1,5 +1,6 @@
 #pragma once
 
+#pragma warning(disable:4514)
 #pragma warning(push, 0)
 #pragma warning(disable:4365)
 #include <SDL2/SDL.h>
