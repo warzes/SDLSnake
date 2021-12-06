@@ -81,6 +81,11 @@ void GameUpdate(double deltaTime, const Uint8* currentKeyStates)
 		direction.y = 0;
 	}
 
+	if (currentKeyStates[SDL_SCANCODE_SPACE])
+	{
+		stopMove = !stopMove;
+	}
+
 	if (timer > delayMove)
 	{
 		timer = 0;
